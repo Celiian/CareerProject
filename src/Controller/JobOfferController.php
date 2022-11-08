@@ -38,7 +38,7 @@ class JobOfferController extends AbstractController
                 'expanded' => true
             ])
             ->add('salary', TextType::class)
-            ->add('save', SubmitType::class, ['label' => 'Create Job Offer'])
+            ->add('save', SubmitType::class, ['label' => 'Create a new job offer'])
             ->getForm();
 
         $form->handleRequest($request);
@@ -74,6 +74,49 @@ class JobOfferController extends AbstractController
         return $this->renderForm('jobOffer/company.html.twig', [
             'jobs' => $jobs,
             'id' => $id
+        ]);
+    }
+
+
+    #[Route('/job_offer/modify/{id}', name: 'modify_job_offer')]
+    public function jobOffersModify(Request $request, ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
+        $jobOffer = $jobOffersRepository->find($id);
+
+        $form = $this->createFormBuilder($jobOffer)
+            ->add('name', TextType::class)
+            ->add('description', TextType::class)
+            ->add('skills', EntityType::class, [
+                'class' => Skills::class,
+                'query_builder' => function (SkillsRepository $skillsRepository) {
+                    return $skillsRepository->createQueryBuilder('s');
+                },
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true
+            ])
+            ->add('salary', TextType::class)
+            ->add('save', SubmitType::class, ['label' => 'Modify this job offer'])
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $jobOffer = $form->getData();
+
+            $entityManager->persist($jobOffer);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('company_job_offer', [
+                'id' => $jobOffer->getCompany()->getId()
+            ]);
+        }
+
+        return $this->renderForm('jobOffer/modify.html.twig', [
+            'form'=> $form,
+            'id' => $jobOffer->getCompany()->getId()
         ]);
     }
 }
