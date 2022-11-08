@@ -9,6 +9,15 @@
         <button>Edit your company</button>
     </a>
 
+    <a href="{{ path('create_job_offer',{id: company.id} ) }}">
+        <button>Post a job offer</button>
+    </a>
+
+    <a href="{{ path('company_job_offer',{id: company.id} ) }}">
+        <button>See your job offer</button>
+    </a>
+
+
     <a href="{{ path('delete_company',{id: company.id} ) }}">
         <button>Delete your company</button>
     </a>

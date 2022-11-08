@@ -28,8 +28,12 @@ class Company
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    public function __construct()
+    public function __construct($name="", $mail="", $description="")
     {
+        $this->name = $name;
+        $this->mail = $mail;
+        $this->description = $description;
+
         $this->jobOffers = new ArrayCollection();
     }
 
