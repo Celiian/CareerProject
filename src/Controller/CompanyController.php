@@ -28,9 +28,9 @@ class CompanyController extends AbstractController
     public function connectCompany(ManagerRegistry $managerRegistry): Response
     {
 
-        $objectManager = $managerRegistry->getManager();
+        $entityManager = $managerRegistry->getManager();
 
-        $companyRepository = $objectManager->getRepository(Company::class);
+        $companyRepository = $entityManager->getRepository(Company::class);
         $allCompanies = $companyRepository->findAll();
 
 
@@ -43,8 +43,8 @@ class CompanyController extends AbstractController
     #[Route('/company/connected/{company_id}', name: 'connected_company')]
     public function connectedCompany(ManagerRegistry $managerRegistry, int $company_id): Response
     {
-        $objectManager = $managerRegistry->getManager();
-        $companyRepository = $objectManager->getRepository(Company::class);
+        $entityManager = $managerRegistry->getManager();
+        $companyRepository = $entityManager->getRepository(Company::class);
         $company = $companyRepository->find($company_id);
 
         return $this->render('company/connected.html.twig', [
@@ -54,10 +54,10 @@ class CompanyController extends AbstractController
 
 
     #[Route('/company/new', name: 'new_company')]
-    public function NewCompany(Request $request, ManagerRegistry $doctrine): Response
+    public function NewCompany(Request $request, ManagerRegistry $managerRegistry): Response
     {
         $company = new Company();
-        $entityManager = $doctrine->getManager();
+        $entityManager = $managerRegistry->getManager();
 
         $form = $this->createFormBuilder($company)
             ->add('name', TextType::class)
@@ -85,8 +85,8 @@ class CompanyController extends AbstractController
     #[Route('/companies/{company_id}', name: 'edit_company')]
     public function EditCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
-        $objectManager = $managerRegistry->getManager();
-        $companyRepository = $objectManager->getRepository(Company::class);
+        $entityManager = $managerRegistry->getManager();
+        $companyRepository = $entityManager->getRepository(Company::class);
         $company = $companyRepository->find($company_id);
 
         $form = $this->createFormBuilder($company)
@@ -100,9 +100,9 @@ class CompanyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $company = $form->getData();
 
-            $objectManager->persist($company);
+            $entityManager->persist($company);
 
-            $objectManager->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('company');
         }
@@ -118,11 +118,11 @@ class CompanyController extends AbstractController
     #[Route('/company/delete/{company_id}', name: 'delete_company')]
     public function DeleteCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
-        $objectManager = $managerRegistry->getManager();
-        $companyRepository = $objectManager->getRepository(Company::class);
+        $entityManager = $managerRegistry->getManager();
+        $companyRepository = $entityManager->getRepository(Company::class);
         $company = $companyRepository->find($company_id);
-        $objectManager->remove($company);
-        $objectManager->flush();
+        $entityManager->remove($company);
+        $entityManager->flush();
 
         return $this->redirectToRoute('connect_company');
 

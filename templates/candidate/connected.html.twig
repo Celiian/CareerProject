@@ -1,0 +1,17 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <div>
+        <h2>Connected at {{ candidate.name }}'s account</h2>
+    </div>
+
+    <a href="{{ path('edit_candidate',{candidate_id: candidate.id} ) }}">
+        <button>Edit your account</button>
+    </a>
+
+    <a href="{{ path('connect_candidate') }}">
+        <button>Go back</button>
+    </a>
+    </div>
+
+{% endblock %}

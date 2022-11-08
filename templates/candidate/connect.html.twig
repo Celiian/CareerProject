@@ -1,0 +1,16 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <ul class="list-group">
+        {% for candidate in candidates %}
+            <li class="list-group-item"><a href="{{ path('connected_candidate',{candidate_id: candidate.id} ) }}">{{ candidate.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+
+    <a href="{{ path('home') }}">
+        <button>Go back</button>
+    </a>
+    </div>
+
+{% endblock %}

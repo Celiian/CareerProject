@@ -20,10 +20,10 @@ class JobOfferController extends AbstractController
 {
 
     #[Route('/job_offer/create/{company_id}', name: 'create_job_offer')]
-    public function createJobOffer(Request $request, ManagerRegistry $doctrine, int $company_id): Response
+    public function createJobOffer(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $jobOffer = new JobOffer();
-        $entityManager = $doctrine->getManager();
+        $entityManager = $managerRegistry->getManager();
 
         $form = $this->createFormBuilder($jobOffer)
             ->add('name', TextType::class)
@@ -65,9 +65,9 @@ class JobOfferController extends AbstractController
 
 
     #[Route('/job_offer/company/{company_id}', name: 'company_job_offer')]
-    public function jobOffersCompany(ManagerRegistry $doctrine, int $company_id): Response
+    public function jobOffersCompany(ManagerRegistry $managerRegistry, int $company_id): Response
     {
-        $entityManager = $doctrine->getManager();
+        $entityManager = $managerRegistry->getManager();
         $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
         $jobs = $jobOffersRepository->findAll();
 
@@ -79,9 +79,9 @@ class JobOfferController extends AbstractController
 
 
     #[Route('/job_offer/modify/{offer_id}', name: 'modify_job_offer')]
-    public function jobOffersModify(Request $request, ManagerRegistry $doctrine, int $offer_id): Response
+    public function jobOffersModify(Request $request, ManagerRegistry $managerRegistry, int $offer_id): Response
     {
-        $entityManager = $doctrine->getManager();
+        $entityManager = $managerRegistry->getManager();
         $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
         $jobOffer = $jobOffersRepository->find($offer_id);
 
@@ -122,9 +122,9 @@ class JobOfferController extends AbstractController
 
 
     #[Route('/job_offer/delete/{id}', name: 'delete_job_offer')]
-    public function jobOffersDelete(Request $request, ManagerRegistry $doctrine, int $id): Response
+    public function jobOffersDelete(Request $request, ManagerRegistry $managerRegistry, int $id): Response
     {
-        $entityManager = $doctrine->getManager();
+        $entityManager = $managerRegistry->getManager();
         $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
         $jobOffer = $jobOffersRepository->find($id);
         $company_id = $jobOffer->getCompany()->getId();

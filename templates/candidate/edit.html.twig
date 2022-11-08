@@ -1,0 +1,9 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+   {{ form(form) }}
+
+   <a href="{{ path('connected_candidate',{candidate_id: candidate_id} ) }}">
+      <button>Go back</button>
+   </a>
+{% endblock %}
