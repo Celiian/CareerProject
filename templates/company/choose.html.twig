@@ -1,0 +1,16 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <ul class="list-group">
+        {% for company in companies %}
+            <li class="list-group-item"><a href="{{ path('edit_company',{id: company.id} ) }}">{{ company.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+
+    <a href="{{ path('company') }}">
+        <button>Go back</button>
+    </a>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <div>
+        <h2>Connected at {{ company.name }}'s account</h2>
+    </div>
+
+    <a href="{{ path('edit_company',{id: company.id} ) }}">
+        <button>Edit your company</button>
+    </a>
+
+    <a href="{{ path('delete_company',{id: company.id} ) }}">
+        <button>Delete your company</button>
+    </a>
+
+    <a href="{{ path('connect_company') }}">
+        <button>Go back</button>
+    </a>
+    </div>
+
+{% endblock %}

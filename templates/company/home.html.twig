@@ -1,0 +1,19 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <div>
+        <div>
+            <a href="{{ path('new_company') }}">
+                <button>Add your company to this website</button>
+            </a>
+            <a href="{{ path('connect_company') }}">
+                <button>Connect to your company account</button>
+            </a>
+            <a href="{{ path('home') }}">
+                <button>Go Home</button>
+            </a>
+
+        </div>
+
+    </div>
+{% endblock %}
