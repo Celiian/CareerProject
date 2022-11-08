@@ -1,0 +1,12 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <div>
+        {{ form(form) }}
+
+        <a href="{{ path('home') }}">
+            <button>Go Home</button>
+        </a>
+
+    </div>
+{% endblock %}
