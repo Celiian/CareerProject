@@ -40,12 +40,12 @@ class CompanyController extends AbstractController
     }
 
 
-    #[Route('/company/connected/{id}', name: 'connected_company')]
-    public function connectedCompany(ManagerRegistry $managerRegistry, int $id): Response
+    #[Route('/company/connected/{company_id}', name: 'connected_company')]
+    public function connectedCompany(ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $objectManager = $managerRegistry->getManager();
         $companyRepository = $objectManager->getRepository(Company::class);
-        $company = $companyRepository->find($id);
+        $company = $companyRepository->find($company_id);
 
         return $this->render('company/connected.html.twig', [
             'company' => $company
@@ -82,12 +82,12 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/companies/{id}', name: 'edit_company')]
-    public function EditCompany(Request $request, ManagerRegistry $managerRegistry, int $id): Response
+    #[Route('/companies/{company_id}', name: 'edit_company')]
+    public function EditCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $objectManager = $managerRegistry->getManager();
         $companyRepository = $objectManager->getRepository(Company::class);
-        $company = $companyRepository->find($id);
+        $company = $companyRepository->find($company_id);
 
         $form = $this->createFormBuilder($company)
             ->add('name', TextType::class)
@@ -110,17 +110,17 @@ class CompanyController extends AbstractController
 
         return $this->renderForm('company/edit.html.twig', [
             'form' => $form,
-            'id' => $id
+            'company_id' => $company_id
         ]);
     }
 
 
-    #[Route('/company/delete/{id}', name: 'delete_company')]
-    public function DeleteCompany(Request $request, ManagerRegistry $managerRegistry, int $id): Response
+    #[Route('/company/delete/{company_id}', name: 'delete_company')]
+    public function DeleteCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $objectManager = $managerRegistry->getManager();
         $companyRepository = $objectManager->getRepository(Company::class);
-        $company = $companyRepository->find($id);
+        $company = $companyRepository->find($company_id);
         $objectManager->remove($company);
         $objectManager->flush();
 

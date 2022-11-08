@@ -5,20 +5,20 @@
         <h2>Connected at {{ company.name }}'s account</h2>
     </div>
 
-    <a href="{{ path('edit_company',{id: company.id} ) }}">
+    <a href="{{ path('edit_company',{company_id: company.id} ) }}">
         <button>Edit your company</button>
     </a>
 
-    <a href="{{ path('create_job_offer',{id: company.id} ) }}">
+    <a href="{{ path('create_job_offer',{company_id: company.id} ) }}">
         <button>Post a job offer</button>
     </a>
 
-    <a href="{{ path('company_job_offer',{id: company.id} ) }}">
+    <a href="{{ path('company_job_offer',{company_id: company.id} ) }}">
         <button>See your job offer</button>
     </a>
 
 
-    <a href="{{ path('delete_company',{id: company.id} ) }}">
+    <a href="{{ path('delete_company',{company_id: company.id} ) }}">
         <button>Delete your company</button>
     </a>
 

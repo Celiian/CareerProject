@@ -19,8 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class JobOfferController extends AbstractController
 {
 
-    #[Route('/job_offer/create/{id}', name: 'create_job_offer')]
-    public function createJobOffer(Request $request, ManagerRegistry $doctrine, int $id): Response
+    #[Route('/job_offer/create/{company_id}', name: 'create_job_offer')]
+    public function createJobOffer(Request $request, ManagerRegistry $doctrine, int $company_id): Response
     {
         $jobOffer = new JobOffer();
         $entityManager = $doctrine->getManager();
@@ -44,7 +44,7 @@ class JobOfferController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $companyRepository = $entityManager->getRepository(Company::class);
-            $company = $companyRepository->find($id);
+            $company = $companyRepository->find($company_id);
 
             $jobOffer->setCompany($company);
             $jobOffer = $form->getData();
@@ -59,13 +59,13 @@ class JobOfferController extends AbstractController
 
         return $this->renderForm('jobOffer/create.html.twig', [
             'form' => $form,
-            'id' => $id,
+            'company_id' => $company_id,
         ]);
     }
 
 
-    #[Route('/job_offer/company/{id}', name: 'company_job_offer')]
-    public function jobOffersCompany(ManagerRegistry $doctrine, int $id): Response
+    #[Route('/job_offer/company/{company_id}', name: 'company_job_offer')]
+    public function jobOffersCompany(ManagerRegistry $doctrine, int $company_id): Response
     {
         $entityManager = $doctrine->getManager();
         $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
@@ -73,17 +73,17 @@ class JobOfferController extends AbstractController
 
         return $this->renderForm('jobOffer/company.html.twig', [
             'jobs' => $jobs,
-            'id' => $id
+            'company_id' => $company_id
         ]);
     }
 
 
-    #[Route('/job_offer/modify/{id}', name: 'modify_job_offer')]
-    public function jobOffersModify(Request $request, ManagerRegistry $doctrine, int $id): Response
+    #[Route('/job_offer/modify/{offer_id}', name: 'modify_job_offer')]
+    public function jobOffersModify(Request $request, ManagerRegistry $doctrine, int $offer_id): Response
     {
         $entityManager = $doctrine->getManager();
         $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
-        $jobOffer = $jobOffersRepository->find($id);
+        $jobOffer = $jobOffersRepository->find($offer_id);
 
         $form = $this->createFormBuilder($jobOffer)
             ->add('name', TextType::class)
@@ -110,13 +110,29 @@ class JobOfferController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('company_job_offer', [
-                'id' => $jobOffer->getCompany()->getId()
+                'company_id' => $jobOffer->getCompany()->getId()
             ]);
         }
 
         return $this->renderForm('jobOffer/modify.html.twig', [
             'form'=> $form,
-            'id' => $jobOffer->getCompany()->getId()
+            'offer_id' => $jobOffer->getCompany()->getId()
         ]);
     }
+
+
+    #[Route('/job_offer/delete/{id}', name: 'delete_job_offer')]
+    public function jobOffersDelete(Request $request, ManagerRegistry $doctrine, int $id): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
+        $jobOffer = $jobOffersRepository->find($id);
+        $company_id = $jobOffer->getCompany()->getId();
+
+        $entityManager->remove($jobOffer);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('company_job_offer', [
+            'company_id' => $company_id
+        ]);    }
 }
