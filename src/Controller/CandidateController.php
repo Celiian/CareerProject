@@ -86,7 +86,7 @@ class CandidateController extends AbstractController
 
 
     #[Route('/candidate/{candidate_id}', name: 'edit_candidate')]
-    public function Editcandidate(Request $request, ManagerRegistry $managerRegistry, int $candidate_id): Response
+    public function editCandidate(Request $request, ManagerRegistry $managerRegistry, int $candidate_id): Response
     {
         $entityManager = $managerRegistry->getManager();
         $candidateRepository = $entityManager->getRepository(Candidate::class);
@@ -126,5 +126,18 @@ class CandidateController extends AbstractController
         ]);
     }
 
+
+    #[Route('/candidate/delete/{candidate_id}', name: 'delete_candidate')]
+    public function deleteCandidate( ManagerRegistry $managerRegistry, int $candidate_id): Response
+    {
+        $entityManager = $managerRegistry->getManager();
+        $candidateRepository = $entityManager->getRepository(Candidate::class);
+        $candidate = $candidateRepository->find($candidate_id);
+        $entityManager->remove($candidate);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('connect_candidate');
+
+    }
 
 }

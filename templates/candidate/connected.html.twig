@@ -9,6 +9,11 @@
         <button>Edit your account</button>
     </a>
 
+
+    <a href="{{ path('delete_candidate',{candidate_id: candidate.id} ) }}">
+        <button>Delete your candidate</button>
+    </a>
+
     <a href="{{ path('connect_candidate') }}">
         <button>Go back</button>
     </a>

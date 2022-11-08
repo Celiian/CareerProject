@@ -54,7 +54,7 @@ class CompanyController extends AbstractController
 
 
     #[Route('/company/new', name: 'new_company')]
-    public function NewCompany(Request $request, ManagerRegistry $managerRegistry): Response
+    public function newCompany(Request $request, ManagerRegistry $managerRegistry): Response
     {
         $company = new Company();
         $entityManager = $managerRegistry->getManager();
@@ -83,7 +83,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/companies/{company_id}', name: 'edit_company')]
-    public function EditCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
+    public function editCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $entityManager = $managerRegistry->getManager();
         $companyRepository = $entityManager->getRepository(Company::class);
@@ -116,7 +116,7 @@ class CompanyController extends AbstractController
 
 
     #[Route('/company/delete/{company_id}', name: 'delete_company')]
-    public function DeleteCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
+    public function deleteCompany(ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $entityManager = $managerRegistry->getManager();
         $companyRepository = $entityManager->getRepository(Company::class);
