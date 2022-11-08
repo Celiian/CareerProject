@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Candidate;
 use App\Entity\Skills;
 use App\Repository\SkillsRepository;
+use App\Service\MatchingAlgorithm;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,17 +74,19 @@ class CandidateController extends AbstractController
     }
 
     #[Route('/candidate/connected/{candidate_id}', name: 'connected_candidate')]
-    public function connectedCandidate(ManagerRegistry $managerRegistry, int $candidate_id): Response
+    public function connectedCandidate(MatchingAlgorithm $matchingAlgorithm, ManagerRegistry $managerRegistry, int $candidate_id): Response
     {
         $entityManager = $managerRegistry->getManager();
         $candidateRepository = $entityManager->getRepository(Candidate::class);
         $candidate = $candidateRepository->find($candidate_id);
 
+        $arrayOffers = $matchingAlgorithm->getExactOffers($candidate_id, $managerRegistry);
+
         return $this->render('candidate/connected.html.twig', [
-            'candidate' => $candidate
+            'candidate' => $candidate,
+            'offers' => $arrayOffers
         ]);
     }
-
 
 
     #[Route('/candidate/{candidate_id}', name: 'edit_candidate')]
@@ -128,7 +132,7 @@ class CandidateController extends AbstractController
 
 
     #[Route('/candidate/delete/{candidate_id}', name: 'delete_candidate')]
-    public function deleteCandidate( ManagerRegistry $managerRegistry, int $candidate_id): Response
+    public function deleteCandidate(ManagerRegistry $managerRegistry, int $candidate_id): Response
     {
         $entityManager = $managerRegistry->getManager();
         $candidateRepository = $entityManager->getRepository(Candidate::class);
