@@ -7,11 +7,9 @@ use App\Entity\Company;
 use App\Entity\JobOffer;
 use App\Entity\Skills;
 use App\Repository\SkillsRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,14 +65,15 @@ class JobOfferController extends AbstractController
 
 
     #[Route('/job_offer/company/{id}', name: 'company_job_offer')]
-    public function jobOffersCompany(Request $request, ManagerRegistry $doctrine, int $id): Response
+    public function jobOffersCompany(ManagerRegistry $doctrine, int $id): Response
     {
         $entityManager = $doctrine->getManager();
         $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
-        $jobOffers = $jobOffersRepository->findOneBy($this->jobOffersCompany($id));
-        var_dump($jobOffers);
+        $jobs = $jobOffersRepository->findAll();
+
         return $this->renderForm('jobOffer/company.html.twig', [
-            'jobOffers' => $jobOffers,
+            'jobs' => $jobs,
+            'id' => $id
         ]);
     }
 }
