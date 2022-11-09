@@ -25,40 +25,84 @@
     </a>
     </div>
 
+    <div>
+        <div>
+            <h2>Offers found for you :</h2>
 
-    <h2>Offers found for you :</h2>
+            <div class="list-group w-25">
+                {% for offer in offers %}
+                    <div href="" class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ offer.name }}</h5>
+                            <small>{{ offer.salary }}$/month</small>
+                        </div>
+                        <p class="mb-1">{{ offer.description }}</p>
 
-    <div class="list-group w-25">
-        {% for offer in offers %}
-            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ offer.name }}</h5>
-                    <small>{{ offer.salary }}$/month</small>
-                </div>
-                <p class="mb-1">{{ offer.description }}</p>
+                        <div class="d-flex">
+                            <small class="d-flex">
+                                requested skills :
+                                {% for skill in offer.skills %}
+                                    <p class="skill"> {{ skill.name }} </p>
+                                {% endfor %}
+                            </small>
+                            <a href="{{ path('apply_offer_candidate',{candidate_id: candidate.id, offer_id: offer.id} ) }}">
+                                <button type="button"
+                                        class="btn btn-primary m-0"> Apply
+                                </button>
 
-                <small class="d-flex">
-                    requested skills :
-                    {% for skill in offer.skills %}
-                        <p class="skill"> {{ skill.name }} </p>
-                    {% endfor %}
-                </small>
-            </a>
-        {% endfor %}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <h2> Offers to which you applied :</h2>
+
+            <div class="list-group w-25">
+                {% for candidature in candidatures %}
+                    <div href="" class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ candidature.jobOffer.name }}</h5>
+                            <small>{{ candidature.jobOffer.salary }}$/month</small>
+                        </div>
+                        <p class="mb-1">{{ candidature.jobOffer.description }}</p>
+
+                        <div class="d-flex">
+                            <small class="d-flex">
+                                requested skills :
+                                {% for skill in candidature.jobOffer.skills %}
+                                    <p class="skill"> {{ skill.name }} </p>
+                                {% endfor %}
+                            </small>
+                            <a href="{{ path('cancel_apply_offer_candidate',{candidate_id: candidate.id, offer_id: candidature.jobOffer.id} ) }}">
+                                <button type="button"
+                                        class="btn btn-danger m-0"> Cancel
+                                </button>
+                            </a>
+                        </div>
+                        <p class="mb-1">Status : {{ candidature.status }}</p>
+
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
     </div>
+
 
 
     </div>
 
     <style>
         .skill {
-            margin: 5px;
-            margin-top: 0px;
+            margin-right: 5px;
             border-style: solid;
             border-width: 1px;
             border-radius: 5px;
             width: fit-content;
         }
+
 
     </style>
 

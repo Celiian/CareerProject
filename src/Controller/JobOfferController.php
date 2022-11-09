@@ -116,7 +116,7 @@ class JobOfferController extends AbstractController
 
         return $this->renderForm('jobOffer/modify.html.twig', [
             'form'=> $form,
-            'offer_id' => $jobOffer->getCompany()->getId()
+            'company_id' => $jobOffer->getCompany()->getId()
         ]);
     }
 

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Candidate;
+use App\Entity\Candidature;
+use App\Entity\JobOffer;
 use App\Entity\Skills;
 use App\Repository\SkillsRepository;
 use App\Service\MatchingAlgorithm;
@@ -82,9 +84,23 @@ class CandidateController extends AbstractController
 
         $arrayOffers = $matchingAlgorithm->getExactOffers($candidate_id, $managerRegistry);
 
+
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+
+        $candidatures = $candidatureRepository->findAll();
+
+        $appliedCandidatures = array();
+        foreach ($candidatures as $candidature) {
+            if ($candidature->getCandidate()->getId() == $candidate_id) {
+                $appliedCandidatures[] = $candidature;
+            }
+        }
+
+
         return $this->render('candidate/connected.html.twig', [
             'candidate' => $candidate,
-            'offers' => $arrayOffers
+            'offers' => $arrayOffers,
+            'candidatures' => $appliedCandidatures
         ]);
     }
 
@@ -143,5 +159,52 @@ class CandidateController extends AbstractController
         return $this->redirectToRoute('connect_candidate');
 
     }
+
+
+    #[Route('/candidate/apply/{candidate_id}{offer_id}', name: 'apply_offer_candidate')]
+    public function candidateApplyOffer(int $candidate_id, int $offer_id, ManagerRegistry $managerRegistry): Response
+    {
+
+        $entityManager = $managerRegistry->getManager();
+        $candidate = $entityManager->getRepository(Candidate::class)->find($candidate_id);
+        $offer = $entityManager->getRepository(JobOffer::class)->find($offer_id);
+
+
+        $candidature = new Candidature();
+        $candidature->setCandidate($candidate);
+        $candidature->setJobOffer($offer);
+        $candidature->setStatus("Waiting for an answer");
+
+        $entityManager->persist($candidature);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('connected_candidate', [
+            'candidate_id' => $candidate_id
+        ]);
+    }
+
+    #[Route('/candidate/cancel_apply/{candidate_id}{offer_id}', name: 'cancel_apply_offer_candidate')]
+    public function candidateCancelApply(int $candidate_id, int $offer_id, ManagerRegistry $managerRegistry): Response
+    {
+
+
+        $entityManager = $managerRegistry->getManager();
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+        $candidatures = $candidatureRepository->findAll();
+
+        foreach ($candidatures as $candidature) {
+            if ($candidature->getJobOffer()->getId() == $offer_id and $candidature->getCandidate()->getId() == $candidate_id) {
+                $entityManager->remove($candidature);
+            }
+        }
+        $entityManager->flush();
+
+
+        return $this->redirectToRoute('connected_candidate', [
+            'candidate_id' => $candidate_id
+        ]);
+    }
+
 
 }
