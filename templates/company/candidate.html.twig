@@ -1,0 +1,89 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <div class="d-flex">
+
+        {% for offers in candidateList %}
+            <div class="w-25 m-lg-3 ">
+                <div class="accordion accordion-flush" id="accordionFlush{{ offers.offer.id }}">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading{{ offers.offer.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapse{{ offers.offer.id }}" aria-expanded="false"
+                                    aria-controls="flush-collapse{{ offers.offer.id }}">
+                                {{ offers.offer.name }}
+                            </button>
+                        </h2>
+                        <div id="flush-collapse{{ offers.offer.id }}" class="accordion-collapse collapse"
+                             aria-labelledby="flush-heading{{ offers.offer.id }}"
+                             data-bs-parent="#accordionFlush{{ offers.offer.id }}">
+                            <div class="box-desc">
+                                <div>
+                                    <div class="accordion-body">
+                                        {{ offers.offer.description }}
+                                        <br>
+                                        Salary : {{ offers.offer.salary }}$ / month
+                                    </div>
+                                    <div class="accordion-body skill-box">
+                                        requested skills :
+                                        {% for skill in offers.offer.skills %}
+                                            <p class="skill"> {{ skill.name }} </p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="{{ path('modify_job_offer',{offer_id: offers.offer.id} ) }}">
+                                        <button type="button" class="btn btn-primary btn-modify">Modify</button>
+                                    </a>
+                                    <a href="{{ path('delete_job_offer',{id: offers.offer.id} ) }}">
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% for candidature in offers.candidatures %}
+                    <div class="border d-flex">
+                        <div>
+                            <p> {{ candidature.candidate.name }}</p>
+                            <p> {{ candidature.candidate.lastName }}</p>
+                            <p> {{ candidature.candidate.mail }}</p>
+                            <small class="d-flex">
+                                Candidate skills :
+                                {% for skill in candidature.candidate.skills %}
+                                    <p class="skill"> {{ skill.name }} </p>
+                                {% endfor %}
+                            </small>
+                        </div>
+                        <div>
+                            <a>
+                                <button type="button" class="btn btn-success m-1">Validate</button>
+                            </a>
+                            <a>
+                                <button type="button" class="btn btn-danger m-1">Refuse</button>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{{ path('connected_company',{company_id: company_id} ) }}">
+        <button>Go back</button>
+    </a>
+
+
+    <style>
+        .skill {
+            margin-right: 5px;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 5px;
+            width: fit-content;
+        }
+
+
+    </style>
+
+{% endblock %}

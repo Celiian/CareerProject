@@ -3,7 +3,9 @@
 // src/Controller/CompanyController.php
 namespace App\Controller;
 
+use App\Entity\Candidature;
 use App\Entity\Company;
+use App\Entity\JobOffer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -126,5 +128,47 @@ class CompanyController extends AbstractController
 
         return $this->redirectToRoute('connect_company');
 
+    }
+
+
+
+    #[Route('/company/{company_id}/offers', name: 'company_candidate')]
+    public function candidatesCompany(ManagerRegistry $managerRegistry, int $company_id): Response
+    {
+        $entityManager = $managerRegistry->getManager();
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+        $companyRepository = $entityManager->getRepository(Company::class);
+
+        $company = $companyRepository->find($company_id);
+        $offers = $company->getJobOffers();
+
+        $candidaturesInfo = array();
+        foreach ($offers as $offer){
+            $candidatureInfo = array();
+            $candidatures = $candidatureRepository->findBy(["jobOffer" => $offer]);
+            $list = array();
+            foreach ($candidatures as $candidature){
+                $list[] = $candidature;
+            }
+
+            $candidatureInfo = [
+                "offer" => $offer,
+                "candidatures" => $list,
+            ];
+
+            $candidaturesInfo[] = $candidatureInfo;
+
+        }
+
+
+
+        $candidatureRepository->findBy(['jobOffer' => ""]);
+
+
+
+        return $this->renderForm('company/candidate.html.twig', [
+            'candidateList' => $candidaturesInfo,
+            'company_id' => $company_id
+        ]);
     }
 }
