@@ -174,7 +174,7 @@ class CompanyController extends AbstractController
     {
         $email = (new Email())
             ->from('hello@example.com')
-            ->to('you@example.com')
+            ->to('celian.opigez@gmail.com')
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
