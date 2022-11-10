@@ -52,36 +52,6 @@ class CompanyController extends AbstractController
         ]);
     }
 
-
-    #[Route('/company/new', name: 'new_company')]
-    public function newCompany(Request $request, ManagerRegistry $managerRegistry): Response
-    {
-        $company = new Company();
-        $entityManager = $managerRegistry->getManager();
-
-        $form = $this->createFormBuilder($company)
-            ->add('name', TextType::class)
-            ->add('description', TextType::class)
-            ->add('mail', TextType::class)
-            ->add('save', SubmitType::class, ['label' => 'Create Company'])
-            ->getForm();
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $company = $form->getData();
-
-            $entityManager->persist($company);
-
-            $entityManager->flush();
-
-            return $this->redirectToRoute('company');
-        }
-
-        return $this->renderForm('company/new.html.twig', [
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/companies/{company_id}', name: 'edit_company')]
     public function editCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
@@ -125,6 +95,5 @@ class CompanyController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('connect_company');
-
     }
 }
