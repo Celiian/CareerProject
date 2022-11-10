@@ -13,6 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CompanyController extends AbstractController
@@ -131,7 +134,6 @@ class CompanyController extends AbstractController
     }
 
 
-
     #[Route('/company/{company_id}/offers', name: 'company_candidate')]
     public function candidatesCompany(ManagerRegistry $managerRegistry, int $company_id): Response
     {
@@ -143,11 +145,11 @@ class CompanyController extends AbstractController
         $offers = $company->getJobOffers();
 
         $candidaturesInfo = array();
-        foreach ($offers as $offer){
+        foreach ($offers as $offer) {
             $candidatureInfo = array();
             $candidatures = $candidatureRepository->findBy(["jobOffer" => $offer]);
             $list = array();
-            foreach ($candidatures as $candidature){
+            foreach ($candidatures as $candidature) {
                 $list[] = $candidature;
             }
 
@@ -161,14 +163,39 @@ class CompanyController extends AbstractController
         }
 
 
-
-        $candidatureRepository->findBy(['jobOffer' => ""]);
-
-
-
         return $this->renderForm('company/candidate.html.twig', [
             'candidateList' => $candidaturesInfo,
             'company_id' => $company_id
         ]);
     }
+
+    #[Route('/mail', name: 'mail')]
+    public function mail(MailerInterface $mailer): Response
+    {
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to('you@example.com')
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('Time for Symfony Mailer!')
+            ->text('Sending emails is fun again!')
+            ->html('<p>See Twig integration for better HTML integration!</p>');
+
+        try {
+            $mailer->send($email);
+            var_dump("succeed");
+
+        } catch (TransportExceptionInterface $e) {
+            var_dump($e);
+            var_dump("bug");
+        }
+
+
+        return $this->renderForm("mail.html.twig");
+
+    }
+
+
 }
