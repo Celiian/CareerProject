@@ -1,0 +1,25 @@
+{% extends('base.html.twig') %}
+
+{% block jobMatch %}
+<div class="d-flex" style="height: 90%">
+    <div style="background-color: #E363AA; width: 50%">
+        <img
+                src="{{ asset('images/jobmatch-pink.png') }}"
+                height="400"
+                style="margin-left: 10%;"
+        />
+
+        <h1 style="color: white; margin-left: 5%">
+            Find your dream job <br>
+            in a few clicks
+        </h1>
+        <button style="
+            border-style: none; margin-left: 5%;
+             color: #E363AA; width: 50%; height:auto;
+              font-size: xxx-large; margin-top: 2%;
+              padding-top: 2%; font-family: 'Noto Serif Ahom'">
+            Learn more
+        </button>
+    </div>
+
+{% endblock %}

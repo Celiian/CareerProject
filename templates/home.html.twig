@@ -1,17 +1,8 @@
 {% extends('base.html.twig') %}
 
 {% block body %}
+    {{ block("nav", "./navs/navHome.html.twig") }}
 
-
-    <a href="{{ path('company') }}">
-        <button>Go to company management</button>
-    </a>
-
-    <a href="{{ path('create_candidate') }}">
-        <button>Create your candidate account</button>
-    </a>
-    <a href="{{ path('connect_candidate') }}">
-        <button>Connect to your candidate account</button>
-    </a>
+    {{ block("jobMatch", "./connexions/jobMatch.html.twig") }}
 
 {% endblock %}

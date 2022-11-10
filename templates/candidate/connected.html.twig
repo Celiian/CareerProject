@@ -2,96 +2,56 @@
 
 {% block body %}
     <div>
-        <h2>Connected at {{ candidate.name }}'s account</h2>
-        <small class="d-flex">
-            Your skills :
-            {% for skill in candidate.skills %}
-                <p class="skill"> {{ skill.name }} </p>
-            {% endfor %}
-        </small>
+        {{ block("nav", "./navs/navCandidate.html.twig") }}
     </div>
-
-    <a href="{{ path('edit_candidate',{candidate_id: candidate.id} ) }}">
-        <button>Edit your account</button>
-    </a>
-
-
-    <a href="{{ path('delete_candidate',{candidate_id: candidate.id} ) }}">
-        <button>Delete your candidate</button>
-    </a>
-
-    <a href="{{ path('connect_candidate') }}">
-        <button>Go back</button>
-    </a>
-    </div>
-
     <div>
-        <div>
-            <h2>Offers found for you :</h2>
-
-            <div class="list-group w-25">
-                {% for offer in offers %}
-                    <div href="" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ offer.name }}</h5>
-                            <small>{{ offer.salary }}$/month</small>
+        <h1 style="padding-top: 2%;color: gray; text-align: center">Here are some offers that can interest you :</h1>
+        <div class="d-flex justify-content-around w-100">
+            {% for offer in offers %}
+                <div class="card text-center" style="max-width: 30%; min-width: 30%; margin-top: 7%">
+                    <div class="card-header" style="background-color:#FDD3FD; color: white">
+                        <h4>{{ offer.name }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex" style="height: 30%">
+                            <h6>Description :</h6>
+                            <p class="card-text" style="width: 50%">{{ offer.description }}</p>
+                            <p class="card-title"
+                               style="width: 50%; margin-left: 2%; border-left-style: solid; border-width: 0.1pt">Salary
+                                : {{ offer.salary }}$ /month</p>
                         </div>
-                        <p class="mb-1">{{ offer.description }}</p>
-
-                        <div class="d-flex">
-                            <small class="d-flex">
-                                requested skills :
+                        <div style="height: 55%; margin-top: 2%">
+                            <div>
+                                <p>requested skills :</p>
                                 {% for skill in offer.skills %}
-                                    <p class="skill"> {{ skill.name }} </p>
+                                    <p class="btn btn-info" style="color: white"> {{ skill.name }} </p>
                                 {% endfor %}
-                            </small>
-                            <a href="{{ path('apply_offer_candidate',{candidate_id: candidate.id, offer_id: offer.id} ) }}">
-                                <button type="button"
-                                        class="btn btn-primary m-0"> Apply
-                                </button>
-
-                            </a>
+                            </div>
+                        </div>
+                        <div style="text-align: right">
+                            {% if offer in candidatures %}
+                                <a href="{{ path('cancel_apply_offer_candidate',{candidate_id: candidate.id, offer_id: offer.id} ) }}">
+                                    <button type="button"
+                                            class="btn btn-danger m-0"> Cancel candidature
+                                    </button>
+                                </a>
+                            {% endif %}
+                            {% if offer not in candidatures %}
+                                <a href="{{ path('apply_offer_candidate',{candidate_id: candidate.id, offer_id: offer.id} ) }}">
+                                    <button type="button"
+                                            class="btn btn-primary m-0"> Apply
+                                    </button>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div>
-            <h2> Offers to which you applied :</h2>
 
-            <div class="list-group w-25">
-                {% for candidature in candidatures %}
-                    <div href="" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ candidature.jobOffer.name }}</h5>
-                            <small>{{ candidature.jobOffer.salary }}$/month</small>
-                        </div>
-                        <p class="mb-1">{{ candidature.jobOffer.description }}</p>
-
-                        <div class="d-flex">
-                            <small class="d-flex">
-                                requested skills :
-                                {% for skill in candidature.jobOffer.skills %}
-                                    <p class="skill"> {{ skill.name }} </p>
-                                {% endfor %}
-                            </small>
-                            <a href="{{ path('cancel_apply_offer_candidate',{candidate_id: candidate.id, offer_id: candidature.jobOffer.id} ) }}">
-                                <button type="button"
-                                        class="btn btn-danger m-0"> Cancel
-                                </button>
-                            </a>
-                        </div>
-                        <p class="mb-1">Status : {{ candidature.status }}</p>
-
+                    <div class="card-footer text-muted" style="background-color: #FDD3FD; color: white">
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
 
         </div>
-    </div>
-
-
-
     </div>
 
     <style>

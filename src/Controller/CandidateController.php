@@ -80,27 +80,41 @@ class CandidateController extends AbstractController
     {
         $entityManager = $managerRegistry->getManager();
         $candidateRepository = $entityManager->getRepository(Candidate::class);
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
         $candidate = $candidateRepository->find($candidate_id);
 
-        $arrayOffers = $matchingAlgorithm->getExactOffers($candidate_id, $managerRegistry);
+        $arrayOffers = $matchingAlgorithm->getExactAllOffers($candidate_id, $managerRegistry);
 
-
-        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+        $x = 0;
+        $offers = array();
+        shuffle($arrayOffers);
+        foreach ($arrayOffers as $offer){
+            if ($x < 2) {
+                $offers[] = $offer;
+                $x++;
+            }
+            else{
+                break;
+            }
+        }
 
         $candidatures = $candidatureRepository->findAll();
 
         $appliedCandidatures = array();
-        foreach ($candidatures as $candidature) {
+        $i = 0;
+        foreach ($candidatures as $candidature){
             if ($candidature->getCandidate()->getId() == $candidate_id) {
-                $appliedCandidatures[] = $candidature;
+                $appliedCandidatures[] = $candidature->getJobOffer();
             }
+            $i++;
         }
 
 
         return $this->render('candidate/connected.html.twig', [
             'candidate' => $candidate,
-            'offers' => $arrayOffers,
-            'candidatures' => $appliedCandidatures
+            'offers' => $offers,
+            'candidatures' => $appliedCandidatures,
+            'link' => "home"
         ]);
     }
 
@@ -206,5 +220,66 @@ class CandidateController extends AbstractController
         ]);
     }
 
+    #[Route('/candidate/offers/{candidate_id}', name: 'offers_candidate')]
+    public function offersCandidate(MatchingAlgorithm $matchingAlgorithm, ManagerRegistry $managerRegistry, int $candidate_id): Response
+    {
+        $entityManager = $managerRegistry->getManager();
+        $candidateRepository = $entityManager->getRepository(Candidate::class);
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+        $candidate = $candidateRepository->find($candidate_id);
+
+        $arrayOffers = $matchingAlgorithm->getExactAllOffers($candidate_id, $managerRegistry);
+
+        $offers = array();
+        shuffle($arrayOffers);
+        foreach ($arrayOffers as $offer){
+                $offers[] = $offer;
+        }
+
+        $candidatures = $candidatureRepository->findAll();
+
+        $appliedCandidatures = array();
+        $i = 0;
+        foreach ($candidatures as $candidature){
+            if ($candidature->getCandidate()->getId() == $candidate_id) {
+                $appliedCandidatures[] = $candidature->getJobOffer();
+            }
+            $i++;
+        }
+
+
+        return $this->render('candidate/offers.html.twig', [
+            'candidate' => $candidate,
+            'offers' => $offers,
+            'candidatures' => $appliedCandidatures,
+            'link' => "offers"
+        ]);
+    }
+
+
+    #[Route('/candidate/candidatures/{candidate_id}', name: 'candidatures_candidate')]
+    public function candidaturesCandidate(MatchingAlgorithm $matchingAlgorithm, ManagerRegistry $managerRegistry, int $candidate_id): Response
+    {
+        $entityManager = $managerRegistry->getManager();
+        $candidateRepository = $entityManager->getRepository(Candidate::class);
+        $candidatureRepository = $entityManager->getRepository(Candidature::class);
+        $candidate = $candidateRepository->find($candidate_id);
+
+        $candidatures = $candidate->getCandidatures();
+
+        $appliedCandidatures = array();
+        foreach ($candidatures as $candidature){
+                $appliedCandidatures[] = $candidature->getJobOffer();
+
+        }
+
+
+        return $this->render('candidate/offers.html.twig', [
+            'candidate' => $candidate,
+            'offers' => $appliedCandidatures,
+            'candidatures'=> $appliedCandidatures,
+            'link' => "candidatures"
+        ]);
+    }
 
 }

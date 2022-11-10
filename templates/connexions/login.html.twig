@@ -1,0 +1,61 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    {{ block("nav", "./navs/navHome.html.twig") }}
+
+    {{ block("jobMatch", "./connexions/jobMatch.html.twig") }}
+
+    <div class="container login-container d-flex" style="margin-top: 10%; width: 50%; height: 100vh">
+        <div class="row" style="display: flex; flex-direction: row; flex-wrap: nowrap; width: 90%; height: 50%">
+            <div class="col-md-6 login-form-1" style="margin-left: 5%">
+                <p>Log in to your candidate account now</p>
+                <div class="form-">
+                    {{ form(formCandidate) }}
+                </div>
+            </div>
+            <div class="col-md-6 login-form-1" style="margin-left: 5%; margin-right: 5%">
+                <p>Log in to your company account now</p>
+                <div class="form-">
+                    {{ form(formCompany) }}
+                </div>
+            </div>
+        </div>
+    </diV>
+    </div>
+
+
+    <style>
+        .login-container {
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .login-form-1 {
+            padding: 5%;
+            box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .login-form-1 h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        .login-form-2 {
+            padding: 5%;
+            background: #0062cc;
+            box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .login-form-2 h3 {
+            text-align: center;
+            color: #fff;
+        }
+
+        .login-container form {
+            padding: 10%;
+        }
+
+
+    </style>
+
+{% endblock %}
