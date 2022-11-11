@@ -134,6 +134,9 @@ class CompanyController extends AbstractController
                 ."</p>";
         $mailer->sendMail($mailerInterface, $company->getMail(), $candidate->getMail(), $subject, "", $html );
 
+        $entityManager->remove($jobOffer);
+        $entityManager->flush();
+
         return $this->redirectToRoute('company_candidate', [
             'company_id' => $company->getId(),
         ]);

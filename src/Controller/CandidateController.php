@@ -178,7 +178,6 @@ class CandidateController extends AbstractController
     #[Route('/candidate/apply/{candidate_id}{offer_id}', name: 'apply_offer_candidate')]
     public function candidateApplyOffer(int $candidate_id, int $offer_id, ManagerRegistry $managerRegistry): Response
     {
-
         $entityManager = $managerRegistry->getManager();
         $candidate = $entityManager->getRepository(Candidate::class)->find($candidate_id);
         $offer = $entityManager->getRepository(JobOffer::class)->find($offer_id);
@@ -188,7 +187,6 @@ class CandidateController extends AbstractController
         $candidature->setCandidate($candidate);
         $candidature->setJobOffer($offer);
         $candidature->setStatus("Waiting for an answer");
-
         $entityManager->persist($candidature);
 
         $entityManager->flush();

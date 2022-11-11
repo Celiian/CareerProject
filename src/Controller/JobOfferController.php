@@ -53,8 +53,9 @@ class JobOfferController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('company');
-        }
+            return $this->redirectToRoute('company_candidate', [
+                'company_id' => $company_id
+            ]);        }
 
 
         $company = $entityManager->getRepository(Company::class)->find($company_id);
