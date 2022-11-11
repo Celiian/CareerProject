@@ -1,6 +1,7 @@
 {% extends('base.html.twig') %}
 
 {% block body %}
+    {{ block("nav", "./navs/navCompany.html.twig") }}
 
     <div>
         {{ form(form) }}

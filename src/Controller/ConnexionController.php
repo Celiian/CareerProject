@@ -36,6 +36,7 @@ class ConnexionController extends AbstractController
 
             $entityManager->flush();
 
+
             return $this->redirectToRoute('connected_candidate', ['candidate_id' => $candidate->getId()]);
         }
 
@@ -75,7 +76,7 @@ class ConnexionController extends AbstractController
         $candidate = new Candidate();
         $formCandidate = $this->createFormBuilder($candidate)
             ->add('mail', TextType::class)
-            ->add('save', SubmitType::class, ['label' => 'Sign in'])
+            ->add('saved', SubmitType::class, ['label' => 'Sign in'])
             ->getForm();
 
         $formCandidate->handleRequest($request);
@@ -99,7 +100,7 @@ class ConnexionController extends AbstractController
 
             $company = $entityManager->getRepository(Company::class)->findOneBy(["mail" => $company->getMail()]);
 
-            return $this->redirectToRoute('connected_company', ['company_id' => $company->getId()]);
+            return $this->redirectToRoute('company_candidate', ['company_id' => $company->getId()]);
         }
         return $this->renderForm('connexions/login.html.twig', [
             'formCandidate' => $formCandidate,

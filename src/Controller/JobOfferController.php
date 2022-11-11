@@ -57,11 +57,14 @@ class JobOfferController extends AbstractController
         }
 
 
+        $company = $entityManager->getRepository(Company::class)->find($company_id);
         return $this->renderForm('jobOffer/create.html.twig', [
             'form' => $form,
-            'company_id' => $company_id,
+            'company' => $company,
+            'link' => "create"
         ]);
     }
+
 
 
     #[Route('/job_offer/modify/{offer_id}', name: 'modify_job_offer')]

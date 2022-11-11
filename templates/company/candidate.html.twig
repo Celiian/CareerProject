@@ -1,9 +1,16 @@
 {% extends('base.html.twig') %}
 
 {% block body %}
-    <div class="d-flex">
+    {{ block("nav", "./navs/navCompany.html.twig") }}
 
-        {% for offers in candidateList %}
+    <div class="d-flex" style="justify-content: center" >
+        {% if offerList|length == 0 %}
+            <div style="margin-top: 15%">
+                <h1 style="font-size: 100px">Its empty...</h1>
+                <p style="font-size: small">Try to post an offer first.</p>
+            </div>
+        {% endif %}
+        {% for offers in offerList %}
             <div class="w-25 m-lg-3 ">
                 <div class="accordion accordion-flush" id="accordionFlush{{ offers.offer.id }}">
                     <div class="accordion-item">
@@ -27,7 +34,8 @@
                                     <div class="accordion-body skill-box">
                                         requested skills :
                                         {% for skill in offers.offer.skills %}
-                                            <p class="skill"> {{ skill.name }} </p>
+                                            <p class="btn btn-info"
+                                               style="color: white; margin-left: 5%"> {{ skill.name }} </p>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -44,7 +52,7 @@
                     </div>
                 </div>
                 {% for candidature in offers.candidatures %}
-                    <div class="border d-flex">
+                    <div class="border d-flex" style="margin-top: 5%">
                         <div>
                             <p> {{ candidature.candidate.name }}</p>
                             <p> {{ candidature.candidate.lastName }}</p>
@@ -52,12 +60,12 @@
                             <small class="d-flex">
                                 Candidate skills :
                                 {% for skill in candidature.candidate.skills %}
-                                    <p class="skill"> {{ skill.name }} </p>
+                                    <p class="btn btn-info" style="color: white; margin-left: 5%"> {{ skill.name }} </p>
                                 {% endfor %}
                             </small>
                         </div>
                         <div>
-                            <a href="{{ path('mail') }}">
+                            <a href="{{ path('validate_candidate',{company_id: candidature.jobOffer.company.id, offer_id: candidature.jobOffer.id, candidate_id: candidature.candidate.id} ) }}">
                                 <button type="button" class="btn btn-success m-1">Validate</button>
                             </a>
                             <a>
@@ -69,9 +77,6 @@
             </div>
         {% endfor %}
     </div>
-    <a href="{{ path('connected_company',{company_id: company_id} ) }}">
-        <button>Go back</button>
-    </a>
 
 
     <style>

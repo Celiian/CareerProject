@@ -1,9 +1,11 @@
 {% extends('base.html.twig') %}
 
 {% block body %}
+   {{ block("nav", "./navs/navCompany.html.twig") }}
+
    {{ form(form) }}
 
-   <a href="{{ path('connected_company',{company_id: company_id} ) }}">
+   <a href="{{ path('company_candidate',{company_id: company.id} ) }}">
       <button>Go back</button>
    </a>
 {% endblock %}

@@ -1,0 +1,98 @@
+{% extends('base.html.twig') %}
+
+{% block nav %}
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg"
+         style=" width: 100%; border-bottom-style: solid; border-width: 0.1pt; border-color: #AAAAAA; margin-top: -1.7vh; padding-bottom: -1vh">
+        <!-- Container wrapper -->
+        <div class="container m-lg-0">
+            <!-- Navbar brand -->
+            <a class="navbar-brand me-2 m-0" href="{{ path('home') }}">
+                <img
+                        src="{{ asset('images/jobmatch-black.png') }}"
+                        height="80"
+                        alt="JobMatch Logo"
+                        loading="lazy"
+                        style="margin-top: -5px;"
+
+                />
+            </a>
+
+            <!-- Toggle button -->
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarButtonsExample"
+                    aria-controls="navbarButtonsExample"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarButtonsExample">
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link"> Connected at {{ company.name }}'s account </a>
+                    </li>
+                </ul>
+                <!-- Left links -->
+                <div class="d-flex align-items-center">
+
+
+                    <div class="dropdown">
+                        <button style="border-style: none; background-color: white" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ asset('images/profil.png') }}"
+                                 height="50"
+                            >
+                        </button>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                   href="{{ path('edit_company',{company_id: company.id}) }}">Edit company</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ path('login') }}">Log Out</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Collapsible wrapper -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    {% if link != "edit" %}
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link
+                        {% if link == "offers" %}
+                        active
+                        {% endif %}"
+                    id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                    type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+                <a style="text-decoration: none" href="{{ path('company_candidate',{company_id: company.id} ) }}">
+                    All your offers
+                </a>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link
+                        {% if link == "create" %}
+                        active
+                        {% endif %}" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                    type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                <a style="text-decoration: none" href="{{ path('create_job_offer',{company_id: company.id} ) }}">
+                    Post an offer
+                </a>
+            </button>
+        </li>
+    </ul>
+    {% endif %}
+
+{% endblock %}

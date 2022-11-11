@@ -1,33 +1,22 @@
 <?php
-// src/Controller/CompanyController.php
-// src/Controller/CompanyController.php
 namespace App\Controller;
 
+use App\Entity\Candidate;
 use App\Entity\Candidature;
 use App\Entity\Company;
 use App\Entity\JobOffer;
-use Doctrine\ORM\EntityManager;
+use App\Service\MailSender;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CompanyController extends AbstractController
 {
-
-    #[Route('/company', name: 'company')]
-    public function company(): Response
-    {
-        return $this->render('company/home.html.twig', [
-        ]);
-    }
-
 
     #[Route('/company/connect', name: 'connect_company')]
     public function connectCompany(ManagerRegistry $managerRegistry): Response
@@ -41,23 +30,12 @@ class CompanyController extends AbstractController
 
         return $this->render('company/connect.html.twig', [
             'companies' => $allCompanies,
+            'link' => "offers"
         ]);
     }
 
 
-    #[Route('/company/connected/{company_id}', name: 'connected_company')]
-    public function connectedCompany(ManagerRegistry $managerRegistry, int $company_id): Response
-    {
-        $entityManager = $managerRegistry->getManager();
-        $companyRepository = $entityManager->getRepository(Company::class);
-        $company = $companyRepository->find($company_id);
-
-        return $this->render('company/connected.html.twig', [
-            'company' => $company
-        ]);
-    }
-
-    #[Route('/companies/{company_id}', name: 'edit_company')]
+    #[Route('/company/{company_id}', name: 'edit_company')]
     public function editCompany(Request $request, ManagerRegistry $managerRegistry, int $company_id): Response
     {
         $entityManager = $managerRegistry->getManager();
@@ -85,7 +63,8 @@ class CompanyController extends AbstractController
 
         return $this->renderForm('company/edit.html.twig', [
             'form' => $form,
-            'company_id' => $company_id
+            'company' => $company,
+            'link' => "edit"
         ]);
     }
 
@@ -133,38 +112,31 @@ class CompanyController extends AbstractController
 
 
         return $this->renderForm('company/candidate.html.twig', [
-            'candidateList' => $candidaturesInfo,
-            'company_id' => $company_id
+            'offerList' => $candidaturesInfo,
+            'company' => $company,
+            'link' => 'offers'
         ]);
     }
 
-    #[Route('/mail', name: 'mail')]
-    public function mail(MailerInterface $mailer): Response
+    #[Route('/company/{company_id}/validate/{offer_id}{candidate_id}', name: 'validate_candidate')]
+    public function validateCandidateCompany(MailSender $mailer,MailerInterface $mailerInterface, ManagerRegistry $managerRegistry, int $offer_id, int $candidate_id): Response
     {
-        $email = (new Email())
-            ->from('hello@example.com')
-            ->to('celian.opigez@gmail.com')
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
+        $entityManager = $managerRegistry->getManager();
+        $jobOffersRepository = $entityManager->getRepository(JobOffer::class);
+        $jobOffer = $jobOffersRepository->find($offer_id);
+        $candidate = $entityManager->getRepository(Candidate::class)->find($candidate_id);
+        $company = $jobOffer->getCompany();
 
-        try {
-            $mailer->send($email);
-            var_dump("succeed");
+        $subject = "Your Candidature to " . $jobOffer->getName();
+        $html ="<p>We are glad to announce you that your candidature to the post : " . $jobOffer->getName() . " have been accepted !  
+                <br>
+                You can contact us via e-mail here : ". $company->getMail()
+                ."</p>";
+        $mailer->sendMail($mailerInterface, $company->getMail(), $candidate->getMail(), $subject, "", $html );
 
-        } catch (TransportExceptionInterface $e) {
-            var_dump($e);
-            var_dump("bug");
-        }
-
-
-        return $this->renderForm("mail.html.twig");
-
+        return $this->redirectToRoute('company_candidate', [
+            'company_id' => $company->getId(),
+        ]);
     }
-
 
 }

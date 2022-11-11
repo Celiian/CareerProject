@@ -1,29 +1,8 @@
 {% extends('base.html.twig') %}
 
 {% block body %}
-    <div>
-        <h2>Connected at {{ company.name }}'s account</h2>
-    </div>
+    {{ block("nav", "./navs/navCompany.html.twig") }}
 
-    <a href="{{ path('edit_company',{company_id: company.id} ) }}">
-        <button>Edit your company</button>
-    </a>
 
-    <a href="{{ path('create_job_offer',{company_id: company.id} ) }}">
-        <button>Post a job offer</button>
-    </a>
-
-    <a href="{{ path('company_candidate',{company_id: company.id} ) }}">
-        <button>See your job offer</button>
-    </a>
-
-    <a href="{{ path('delete_company',{company_id: company.id} ) }}">
-        <button>Delete your company</button>
-    </a>
-
-    <a href="{{ path('connect_company') }}">
-        <button>Go back</button>
-    </a>
-    </div>
 
 {% endblock %}
